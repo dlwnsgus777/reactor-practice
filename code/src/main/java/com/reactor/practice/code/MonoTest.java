@@ -42,7 +42,7 @@ public class MonoTest {
 
       System.out.println("?? ----- ");
 
-      sleep(5000);
+      sleep(10000);
 
 //      long beforeTime = System.currentTimeMillis();
 //      Mono.zip(getMonoUser1(), getMonoUser2()).flatMap(tuple -> {
@@ -89,7 +89,7 @@ public class MonoTest {
 
    public static String getUser2() throws InterruptedException {
       log.info("hello2");
-      sleep(1000);
+      sleep(5000);
       log.info("hello2 done");
       return "hotire2";
    }
