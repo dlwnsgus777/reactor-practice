@@ -14,42 +14,48 @@ import static java.lang.Thread.sleep;
 @Slf4j
 public class MonoMapTest {
    public static void main(String[] args) throws InterruptedException  {
-      final long start1 = System.nanoTime();
-
-      Flux.range(1, 5)
-            .flatMap(MonoMapTest::getMonoUser1)
-            .collectList()
-            .doFinally(endType -> log.info("Time taken FLAT MAP: " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start1) + " milliseconds."))
-            .subscribe(System.out::println);
-
-//      getMonoUser1().zipWith(getMonoUser2())
-//            .map(tuple -> {
-//               return tuple.getT1() + tuple.getT2();
-//            }).doFinally(endType -> log.info("Time taken ZIP: " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start1) + " milliseconds."))
-//            .subscribe(log::info);
-
-//      getMonoUser1().flatMap(
-//            user -> getMonoUser2().map(name -> user + name)
-//      ).doFinally(endType -> log.info("Time taken FlatMap: " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " milliseconds."))
-//            .subscribe(log::info);
+//      final long start1 = System.nanoTime();
+//
+//      Flux.range(1, 5)
+//            .flatMap(MonoMapTest::getMonoUser1)
+//            .collectList()
+//            .doFinally(endType -> log.info("Time taken FLAT MAP: " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start1) + " milliseconds."))
+//            .subscribe(System.out::println);
 
       System.out.println("?? ----- ");
 
       final long start = System.nanoTime();
 
-      Mono.just(1)
-            .map(i -> getMonoUser1(i).subscribe())
+//      Flux.range(1, 5)
+//            .concatMap(MonoMapTest::getMonoUser1)
+//            .collectList()
+//            .doFinally(endType -> log.info("Time taken MAP: " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " milliseconds."))
+//            .subscribe(System.out::println);
+
+
+      Flux.range(1, 5)
+            .map(i -> {
+               try {
+                  i = plus(i);
+               } catch (InterruptedException e) {
+                  e.printStackTrace();
+               }
+               return i;
+            })
+            .flatMap(MonoMapTest::getMonoUser1)
+            .collectList()
             .doFinally(endType -> log.info("Time taken MAP: " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " milliseconds."))
             .subscribe(System.out::println);
 
-      sleep(10000);
+
+      sleep(500000000);
 
    }
 
-   public static String getUser() throws InterruptedException {
+   public static int plus(int i) throws InterruptedException {
       System.out.println("hello");
       sleep(1000);
-      return "hotire";
+      return i + 1;
    }
 
 
@@ -62,7 +68,7 @@ public class MonoMapTest {
 
    public static String getUser2(int i) throws InterruptedException {
       log.info("hello2");
-      sleep(1000);
+      sleep(i * 1000L);
       log.info("hello2 done");
       return "hotire " + i;
    }
